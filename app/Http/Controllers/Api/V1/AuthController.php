@@ -38,11 +38,15 @@ class AuthController extends Controller
             'iam_a' => $request->iam_a
         ]);
         $user->assignRole($request->iam_a);
-
+        $token = auth()->login($user);
         return response()->json([
             'success' => true,
             'message' => 'User berhasil didaftarkan !',
-            'data' => $user
+            'data' => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
+            ]
         ]);
     }
 
@@ -51,7 +55,11 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Anda tidak memiliki akses.'], 401);
+            return response()->json([
+                'success' => false,
+                'messages' => 'Email atau password tidak sesuai',
+                'data' => []
+            ],401);
         }
 
         return $this->respondWithToken($token);
@@ -59,7 +67,11 @@ class AuthController extends Controller
 
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil login !',
+            'data' => auth()->user()
+        ]);
     }
 
     public function refresh()
@@ -70,9 +82,23 @@ class AuthController extends Controller
     protected function respondWithToken($token)
     {
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'success' => true,
+            'message' => 'Berhasil login !',
+            'data' => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
+            ]
+        ]);
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil logout !',
+            'data' => []
         ]);
     }
 }
