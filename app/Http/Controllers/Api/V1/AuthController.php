@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -38,14 +39,14 @@ class AuthController extends Controller
             'iam_a' => $request->iam_a
         ]);
         $user->assignRole($request->iam_a);
-        $token = auth()->login($user);
+        $token = Auth::login($user);
         return response()->json([
             'success' => true,
             'message' => 'User berhasil didaftarkan !',
             'data' => [
                 'access_token' => $token,
                 'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60
+                'expires_in' => Auth::factory()->getTTL() * 60
             ]
         ]);
     }
@@ -54,7 +55,7 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (! $token = Auth::attempt($credentials)) {
             return response()->json([
                 'success' => false,
                 'messages' => 'Email atau password tidak sesuai',
@@ -70,13 +71,13 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Berhasil login !',
-            'data' => auth()->user()
+            'data' => Auth::user()
         ]);
     }
 
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(Auth::refresh());
     }
 
     protected function respondWithToken($token)
@@ -87,14 +88,14 @@ class AuthController extends Controller
             'data' => [
                 'access_token' => $token,
                 'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60
+                'expires_in' => Auth::factory()->getTTL() * 60
             ]
         ]);
     }
 
     public function logout()
     {
-        auth()->logout();
+        Auth::logout();
         return response()->json([
             'success' => true,
             'message' => 'Berhasil logout !',

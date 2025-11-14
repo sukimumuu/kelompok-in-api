@@ -15,13 +15,21 @@ class RoleAndPermissionSeeder extends Seeder
     public function run(): void
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        $permission = [
+            'login',
+            'add student',
+            'delete student',
+            'delete teacher',
+            'assign leader',
+            'unassign leader',
+            'create class',
+            'delete class',
+            'update class'
+        ];
 
-        Permission::create(['name' => 'login']);
-        Permission::create(['name' => 'delete student']);
-        Permission::create(['name' => 'delete leader']);
-        Permission::create(['name' => 'delete teacher']);
-        Permission::create(['name' => 'assign leader']);
-
+        foreach ($permission as $perm) {
+            Permission::create(['name' => $perm]);
+        }
 
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
@@ -32,10 +40,7 @@ class RoleAndPermissionSeeder extends Seeder
         $role->givePermissionTo(['login', 'delete student']);
 
         $role = Role::create(['name' => 'teacher']);
-        $role->givePermissionTo(['login', 'delete leader' ,'delete student', 'assign leader']);
-
-        $role = Role::create(['name' => 'admin']);
-        $role->givePermissionTo(['login','delete student', 'delete teacher']);
+        $role->givePermissionTo(['login' ,'delete student', 'assign leader', 'unassign leader', 'create class', 'delete class', 'update class']);
         
         $role = Role::create(['name' => 'superadmin']);
         $role->givePermissionTo(Permission::all());
