@@ -58,7 +58,7 @@ class AuthController extends Controller
         if (! $token = Auth::attempt($credentials)) {
             return response()->json([
                 'success' => false,
-                'messages' => 'Email atau password tidak sesuai',
+                'message' => 'Email atau password tidak sesuai',
                 'data' => []
             ],401);
         }
