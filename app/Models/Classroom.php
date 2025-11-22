@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Classroom extends Model
@@ -32,5 +34,10 @@ class Classroom extends Model
     protected static function classCodeExists($code)
     {
         return static::where('class_code', $code)->exists();
+    }
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'classroom_id', 'id');
     }
 }

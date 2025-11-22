@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\ProjectController;
 use App\Http\Controllers\Api\V1\ClassroomController;
 
 Route::prefix('v1')->group(function () {
@@ -15,7 +16,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
 
         Route::middleware(['role:teacher'])->group(function () {
+            // Classroom Routes
+            Route::get('/classrooms', [ClassroomController::class, 'index']);
             Route::post('/create-class', [ClassroomController::class, 'store']);
+
+            // Project Routes
+            Route::post('/create-project', [ProjectController::class, 'store']);
         });
     });
 
