@@ -55,4 +55,39 @@ class ClassroomController extends Controller
             ]);
         }
     }
+
+    public function joinClass(Request $request)
+    {
+        try {
+            $request->validate([
+                'class_code' => 'required|string|exists:classrooms,class_code',
+            ]);
+
+            $classroom = Classroom::where('class_code', $request->class_code)->first();
+            if (!$classroom) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kelas tidak ditemukan !',
+                    'data' => []
+                ], 404);
+            }
+            
+            $classroom->students()->attach(Auth::user()->id, ['joined_at' => now()]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil bergabung ke kelas !',
+                'data' => []
+            ]);
+
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal bergabung ke kelas !',
+                'data' => []
+            ]);
+        }
+    }
+
 }

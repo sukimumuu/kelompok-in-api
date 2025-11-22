@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Classroom extends Model
 {
@@ -39,5 +40,11 @@ class Classroom extends Model
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class, 'classroom_id', 'id');
+    }
+
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'class_members', 'classroom_id', 'student_id')
+                    ->withPivot('joined_at');
     }
 }

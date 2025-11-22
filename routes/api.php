@@ -21,7 +21,13 @@ Route::prefix('v1')->group(function () {
             Route::post('/create-class', [ClassroomController::class, 'store']);
 
             // Project Routes
+            Route::get('/projects', [ProjectController::class, 'index']);
             Route::post('/create-project', [ProjectController::class, 'store']);
+        });
+
+        Route::middleware(['role:student'])->group(function () {
+            // Join Classroom Route
+            Route::post('/join-class', [ClassroomController::class, 'joinClass']);
         });
     });
 

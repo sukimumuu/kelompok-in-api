@@ -19,6 +19,16 @@ return new class extends Migration
             $table->string('class_code')->unique();
             $table->timestamps();
         });
+
+        Schema::create('class_members', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('classroom_id');
+            $table->foreign('classroom_id')->references('id')->on('classrooms')->onDelete('cascade');
+            $table->unsignedBigInteger('student_id');
+            $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamp('joined_at');
+            $table->unique(['classroom_id', 'student_id']);
+        });
     }
 
     /**
@@ -26,6 +36,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('class_members', function (Blueprint $table) {
+            $table->dropForeign(['classroom_id']);
+            $table->dropForeign(['student_id']);
+        });
+        Schema::dropIfExists('class_members');
         Schema::dropIfExists('classrooms');
     }
 };
