@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\GroupController;
 use App\Http\Controllers\Api\V1\ProjectController;
 use App\Http\Controllers\Api\V1\ClassroomController;
 
@@ -23,6 +24,10 @@ Route::prefix('v1')->group(function () {
             // Project Routes
             Route::get('/projects', [ProjectController::class, 'index']);
             Route::post('/create-project', [ProjectController::class, 'store']);
+
+            // Group Routes
+            Route::get('/groups', [GroupController::class, 'index']);
+            Route::post('/create-group', [GroupController::class, 'store']);
         });
 
         Route::middleware(['role:student'])->group(function () {

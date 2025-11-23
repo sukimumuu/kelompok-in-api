@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Group;
 use App\Models\Classroom;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Project extends Model
@@ -20,5 +22,10 @@ class Project extends Model
     public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class, 'classroom_id', 'id');
+    }
+
+    public function groups(): HasMany
+    {
+        return $this->hasMany(Group::class, 'project_id', 'id');
     }
 }
