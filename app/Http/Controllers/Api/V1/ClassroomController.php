@@ -29,6 +29,25 @@ class ClassroomController extends Controller
             ]);
         }
     }
+
+    public function indexStudent()
+    {
+        try {
+            $classrooms = Auth::user()->classrooms()->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Data kelas berhasil diambil !',
+                'data' => $classrooms
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Data kelas gagal diambil !',
+                'data' => []
+            ]);
+        }
+    }
     public function store(Request $request)
     {
         try {

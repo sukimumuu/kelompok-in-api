@@ -33,6 +33,26 @@ class ProjectController extends Controller
             ]);
         }
     }
+
+    public function indexStudent($id) {
+        try {
+            $projects = Project::with('classroom')
+                        ->where('classroom_id', $id)
+                        ->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Data tugas berhasil diambil !',
+                'data' => $projects
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tugas gagal diambil !',
+                'data' => []
+            ]);
+        }
+    }
     public function store(Request $request)
     {
         try {

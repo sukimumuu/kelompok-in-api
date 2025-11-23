@@ -28,6 +28,10 @@ Route::prefix('v1')->group(function () {
         Route::middleware(['role:student'])->group(function () {
             // Join Classroom Route
             Route::post('/join-class', [ClassroomController::class, 'joinClass']);
+
+            // Student Project Routes
+            Route::get('/classrooms-student', [ClassroomController::class, 'indexStudent']);
+            Route::get('/classroom-student/{id}', [ProjectController::class, 'indexStudent']);
         });
     });
 
